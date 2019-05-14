@@ -1,4 +1,4 @@
-from keyboard import Keyboard
+from WSM.keyboard import Keyboard
 
 
 class Sound:
