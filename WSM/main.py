@@ -1,5 +1,5 @@
 from datetime import date
-from sound import Sound
+from WSM.sound import Sound
 
 print("")
 print("Windows Sound Manager (Python 3)")
@@ -19,37 +19,37 @@ while True:
     option = input("> ")
     print("")
 
-    if (option == "1"):
+    if option == "1":
         Sound.mute()
         continue
 
-    if (option == "2"):
+    if option == "2":
         Sound.volume_up()
         continue
 
-    if (option == "3"):
+    if option == "3":
         Sound.volume_down()
         continue
 
-    if (option == "4"):
+    if option == "4":
         Sound.volume_min()
         continue
 
-    if (option == "5"):
+    if option == "5":
         Sound.volume_max()
         continue
 
-    if (option == "6"):
+    if option == "6":
         volume = int(input("Volume (0 - 100): "))
         Sound.volume_set(volume)
         continue
 
-    if (option == "7"):
+    if option == "7":
         print("Current volume | %s" % str(Sound.current_volume()))
         print("Sound muted    | %s" % str(Sound.is_muted()))
         print("----------------------")
         print("")
         continue
 
-    if (option == "8"):
+    if option == "8":
         exit(0)

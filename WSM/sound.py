@@ -15,6 +15,13 @@ class Sound:
     # Current volume, we will set this to 100 once initialized
     __current_volume = None
 
+    # Initialize volume and set to 50
+    @staticmethod
+    def init():
+        Sound.__track()
+        for i in range(0, 25):
+            Sound.volume_down()
+
     @staticmethod
     def current_volume():
         """
@@ -29,7 +36,7 @@ class Sound:
     @staticmethod
     def __set_current_volume(volume):
         """
-        Current volumne setter
+        Current volume setter
         prevents numbers higher than 100 and numbers lower than 0
         :return: void
         """
@@ -39,7 +46,6 @@ class Sound:
             Sound.__current_volume = 0
         else:
             Sound.__current_volume = volume
-
 
     # The sound is not muted by default, better tracking should be made
     __is_muted = False
@@ -52,18 +58,16 @@ class Sound:
         """
         return Sound.__is_muted
 
-
     @staticmethod
     def __track():
         """
         Start tracking the sound and mute settings
         :return: void
         """
-        if Sound.__current_volume == None:
+        if Sound.__current_volume is None:
             Sound.__current_volume = 0
             for i in range(0, 50):
                 Sound.volume_up()
-
 
     @staticmethod
     def mute():
@@ -72,7 +76,7 @@ class Sound:
         Done by triggering a fake VK_VOLUME_MUTE key event
         :return: void
         """
-        Sound.__track()
+        # Sound.__track()
         Sound.__is_muted = (not Sound.__is_muted)
         Keyboard.key(Keyboard.VK_VOLUME_MUTE)
 
@@ -97,7 +101,6 @@ class Sound:
         Sound.__track()
         Sound.__set_current_volume(Sound.current_volume() - 2)
         Keyboard.key(Keyboard.VK_VOLUME_DOWN)
-
 
     @staticmethod
     def volume_set(amount):
