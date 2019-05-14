@@ -50,21 +50,12 @@ def assistant(command):
     elif 'громче' in command:
         for i in range(5):
             Sound.volume_up()
+            time.sleep(0.2)
 
     elif 'тише' in command:
         for i in range(5):
             Sound.volume_down()
             time.sleep(0.2)
-
-    elif 'открой сайт' in command:
-        reg_ex = re.search('открой сайт (.+)', command)
-        if reg_ex:
-            domain = reg_ex.group(1)
-            url = 'https://www.' + domain
-            webbrowser.open(url)
-            print('Done!')
-        else:
-            pass
 
     elif 'купи слона' in command:
         comm = command
