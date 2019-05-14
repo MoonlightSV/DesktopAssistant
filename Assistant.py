@@ -1,6 +1,9 @@
 import pyttsx3
 import speech_recognition as sr
 from WSM.sound import Sound
+import re
+import webbrowser
+import time
 
 
 def talkToMe(text):
@@ -18,11 +21,12 @@ def myCommand():
 
     with sr.Microphone() as source:
         talkToMe('Слушаю...')
-        r.pause_threshold = 1
-        r.adjust_for_ambient_noise(source, duration=1)
+        # r.pause_threshold = 1
+        # r.adjust_for_ambient_noise(source, duration=1)
         audio = r.listen(source)
 
     try:
+        print('Думаю...')
         command = r.recognize_google(audio, language="ru-RU").lower()
         print('Вы сказали: ' + command + '\n')
 
@@ -35,13 +39,32 @@ def myCommand():
 
 
 def assistant(command):
-    # Усолвия для выполнения команд
+    # Условия для выполнения команд
 
-    if 'тихо' in command:
+    if 'без звука' in command:
         Sound.mute()
 
-    elif 'звук' in command:
+    elif 'включи звук' in command:
         Sound.mute()
+
+    elif 'громче' in command:
+        for i in range(5):
+            Sound.volume_up()
+
+    elif 'тише' in command:
+        for i in range(5):
+            Sound.volume_down()
+            time.sleep(0.2)
+
+    elif 'открой сайт' in command:
+        reg_ex = re.search('открой сайт (.+)', command)
+        if reg_ex:
+            domain = reg_ex.group(1)
+            url = 'https://www.' + domain
+            webbrowser.open(url)
+            print('Done!')
+        else:
+            pass
 
     elif 'купи слона' in command:
         comm = command
@@ -56,7 +79,7 @@ def assistant(command):
 
 
 engine = pyttsx3.init()
-Sound.init()
+# Sound.init()
 
 talkToMe('Приветствую вас')
 
