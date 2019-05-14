@@ -87,8 +87,8 @@ class Sound:
         Done by triggering a fake VK_VOLUME_UP key event
         :return: void
         """
-        Sound.__track()
-        Sound.__set_current_volume(Sound.current_volume() + 2)
+        # Sound.__track()
+        # Sound.__set_current_volume(Sound.current_volume() + 2)
         Keyboard.key(Keyboard.VK_VOLUME_UP)
 
     @staticmethod
@@ -98,8 +98,8 @@ class Sound:
         Done by triggering a fake VK_VOLUME_DOWN key event
         :return: void
         """
-        Sound.__track()
-        Sound.__set_current_volume(Sound.current_volume() - 2)
+        # Sound.__track()
+        # Sound.__set_current_volume(Sound.current_volume() - 2)
         Keyboard.key(Keyboard.VK_VOLUME_DOWN)
 
     @staticmethod
