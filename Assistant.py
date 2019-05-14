@@ -35,13 +35,28 @@ def myCommand():
 
 
 def assistant(command):
-    # Усолвия длявыполнения команд
+    # Усолвия для выполнения команд
 
-    if 'без звука' in command:
+    if 'тихо' in command:
         Sound.mute()
+
+    elif 'звук' in command:
+        Sound.mute()
+
+    elif 'купи слона' in command:
+        comm = command
+        while 'не куплю' not in comm:
+            talkToMe('Все говорят ' + comm + ', а ты купи слона')
+            comm = myCommand()
+        talkToMe('Сразу бы сказали, что не купите')
+
+    elif 'выход' in command:
+        talkToMe('До свидания')
+        exit()
 
 
 engine = pyttsx3.init()
+Sound.init()
 
 talkToMe('Приветствую вас')
 
