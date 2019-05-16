@@ -2,8 +2,8 @@ import pyttsx3
 import speech_recognition as sr
 from WSM.sound import Sound
 import re
-import webbrowser
 import time
+import pyowm
 
 
 def talkToMe(text):
@@ -21,18 +21,18 @@ def myCommand():
 
     with sr.Microphone() as source:
         talkToMe('Слушаю...')
-        # r.pause_threshold = 1
-        # r.adjust_for_ambient_noise(source, duration=1)
+        r.pause_threshold = 0.5
+        r.adjust_for_ambient_noise(source, duration=0.5)
         audio = r.listen(source)
 
     try:
         print('Думаю...')
         command = r.recognize_google(audio, language="ru-RU").lower()
-        print('Вы сказали: ' + command + '\n')
+        print('Вы сказали: ' + command)
 
     # Возвращаемся к началу, чтобы продолжить слушать команды, если получена неузнаваемая речь
     except sr.UnknownValueError:
-        talkToMe('Вас не слышно, попробуйте еще раз...')
+        talkToMe('Не поняла что вы сказали, попробуйте еще раз...')
         command = myCommand()
 
     return command
@@ -64,13 +64,31 @@ def assistant(command):
             comm = myCommand()
         talkToMe('Сразу бы сказали, что не купите')
 
+    elif 'погода в городе' or 'в городе' in command:  # Иногда не слышит слово "погода"
+        reg_ex = re.search('(погода )?в городе (.+)', command)
+        if reg_ex:
+            from pyowm.exceptions import api_response_error
+            try:
+                place = reg_ex.group(2)
+                owm = pyowm.OWM('fd3ef8f70c1f9039e62de497f7fe7375', language='ru')
+                observation = owm.weather_at_place(place)
+                w = observation.get_weather()
+                talkToMe('В городе ' + place.title() + ' сейчас ' + w.get_detailed_status()
+                         + ' температура ' + str(int(w.get_temperature('celsius')['temp'])) + ' градусов')
+            except api_response_error.NotFoundError:
+                talkToMe('Такого города нет')
+        else:
+            talkToMe('Вы не назвали город, скажите еще раз')
+
     elif 'выход' in command:
         talkToMe('До свидания')
         exit()
 
+    else:
+        talkToMe('Такого я еще не умею')
+
 
 engine = pyttsx3.init()
-# Sound.init()
 
 talkToMe('Приветствую вас')
 
