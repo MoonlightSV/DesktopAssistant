@@ -7,6 +7,8 @@ import pyowm
 
 class Friday(object):
     engine = pyttsx3.init()
+    elephant = False
+    owm = pyowm.OWM('fd3ef8f70c1f9039e62de497f7fe7375', language='ru')
 
     @classmethod
     def talkToMe(cls, text):
@@ -37,28 +39,28 @@ class Friday(object):
                 Sound.volume_down()
                 time.sleep(0.2)
 
-        elif 'купи слона' in command:
-            comm = command
-            while 'не куплю' not in comm:
-                cls.talkToMe('Все говорят ' + comm + ', а ты купи слона')
-                # comm = myCommand()
-            cls.talkToMe('Сразу бы сказали, что не купите')
+        elif 'купи слона' in command or cls.elephant:
+            cls.elephant = True
+            if 'не куплю' not in command:
+                cls.talkToMe('Все говорят ' + command + ', а ты купи слона')
+            else:
+                cls.talkToMe('Сразу бы сказали, что не купите')
+                cls.elephant = False
 
-        elif 'погода в городе' or 'в городе' in command:  # Иногда не слышит слово "погода"
+        elif 'погода в городе' in command or 'в городе' in command:  # Иногда не слышит слово "погода"
             reg_ex = re.search('(погода )?в городе (.+)', command)
             if reg_ex:
                 from pyowm.exceptions import api_response_error
                 try:
                     place = reg_ex.group(2)
-                    owm = pyowm.OWM('fd3ef8f70c1f9039e62de497f7fe7375', language='ru')
-                    observation = owm.weather_at_place(place)
+                    observation = cls.owm.weather_at_place(place)
                     w = observation.get_weather()
                     cls.talkToMe('В городе ' + place.title() + ' сейчас ' + w.get_detailed_status()
-                             + ' температура ' + str(int(w.get_temperature('celsius')['temp'])) + ' градусов')
+                                 + ' температура ' + str(int(w.get_temperature('celsius')['temp'])) + ' градусов')
                 except api_response_error.NotFoundError:
                     cls.talkToMe('Такого города нет')
             else:
-                cls.talkToMe('Вы не назвали город, скажите еще раз')
+                cls.talkToMe('Вы не назвали город')
 
         elif 'выход' in command:
             cls.talkToMe('До свидания')
