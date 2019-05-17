@@ -14,14 +14,14 @@ def run_transcription_loop():
 
             try:
                 command = r.recognize_google(audio, language="ru-RU")
-                Assistant.handle_action(command)
                 print('Вы сказали: ' + command)
+                Assistant.handle_action(command)
             except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
+                Assistant.talkToMe("Не поняла что вы сказали, попробуйте еще раз...")
             except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service: %s", e)
+                print("Не могу получить результат из сервисов Google Speech Recognition: {}".format(e))
             except Exception as e:
-                print("Could not process text: %s", e)
+                print("Не могу обработать текст: {}".format(e))
 
 
 def main():
