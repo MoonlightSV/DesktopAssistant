@@ -8,6 +8,7 @@ import pyowm
 class Friday(object):
     engine = pyttsx3.init()
     elephant = False
+    weather = False
     owm = pyowm.OWM('fd3ef8f70c1f9039e62de497f7fe7375', language='ru')
 
     @classmethod
@@ -47,20 +48,23 @@ class Friday(object):
                 cls.talkToMe('Сразу бы сказали, что не купите')
                 cls.elephant = False
 
-        elif 'погода в городе' in command or 'в городе' in command:  # Иногда не слышит слово "погода"
-            reg_ex = re.search('(погода )?в городе (.+)', command)
-            if reg_ex:
+        elif 'погода в городе' in command or 'в городе' in command or cls.weather:  # Иногда не слышит слово "погода"
+            reg_ex = re.search('(погода )?(в городе)?(.+)?', command)
+            if reg_ex.group(3):
+                cls.weather = False
                 from pyowm.exceptions import api_response_error
                 try:
-                    place = reg_ex.group(2)
+                    place = reg_ex.group(3).strip()
                     observation = cls.owm.weather_at_place(place)
                     w = observation.get_weather()
                     cls.talkToMe('В городе ' + place.title() + ' сейчас ' + w.get_detailed_status()
                                  + ' температура ' + str(int(w.get_temperature('celsius')['temp'])) + ' градусов')
                 except api_response_error.NotFoundError:
-                    cls.talkToMe('Такого города нет')
+                    cls.weather = True
+                    cls.talkToMe('Такого города я не нашла, назовите другой')
             else:
-                cls.talkToMe('Вы не назвали город')
+                cls.weather = True
+                cls.talkToMe('Вы не назвали город, повторите еще раз')
 
         elif 'выход' in command:
             cls.talkToMe('До свидания')
